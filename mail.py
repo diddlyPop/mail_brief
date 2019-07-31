@@ -3,7 +3,7 @@ import imaplib, email
 
 def start_connection():
 
-    imap_url = 'imap.gmail.com'
+    imap_url = 'imap.gmail.com'     # only works with gmail at this time
 
     def get_body(msg):
         if msg.is_multipart():
