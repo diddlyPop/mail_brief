@@ -1,6 +1,10 @@
 from tkinter import *
 import mail
 
+# gui.py creates a small login gui requiring email and password to an imap email.
+# gui.py writes the email and password to a text file (this is not safe)
+# gui.py calls mail.start_connection() and runs off the credentials in credentials.txt
+
 
 class LoginFrame(Frame):
     def __init__(self, master):

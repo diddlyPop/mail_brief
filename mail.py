@@ -1,5 +1,8 @@
-import imaplib, email
+import imapclient, email, pyzmail
 
+# mail.py uses credentials from credentials.txt to connect to an imap email.
+# mail.py displays your most recent email
+# mail.py uses IMAPclient and pyzmail modules
 
 def start_connection():
 
@@ -24,7 +27,7 @@ def start_connection():
         con.login(user, password)
         con.select('INBOX')
 
-        result, data = con.fetch(b'11', '(RFC822)')
+        result, data = con.fetch(b'1', '(RFC822)')
 
         raw = email.message_from_bytes(data[0][1])
 
