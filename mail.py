@@ -1,4 +1,5 @@
-import imapclient, email, pyzmail
+import email, pyzmail
+from imapclient import IMAPClient
 
 # mail.py uses credentials from credentials.txt to connect to an imap email.
 # mail.py displays your most recent email
@@ -21,14 +22,9 @@ def start_connection():
     with open('credentials.txt', 'r') as file:
         user = file.readline()
         password = file.readline()
-        print('x'+user+'x')
-        print('x'+password+'x')
-        con = imaplib.IMAP4_SSL(imap_url)
-        con.login(user, password)
-        con.select('INBOX')
-
-        result, data = con.fetch(b'1', '(RFC822)')
-
-        raw = email.message_from_bytes(data[0][1])
-
-        print(get_body(raw))
+        server = IMAPClient(imap_url, use_uid=True)
+        server.login(user, password)
+        select_info = server.select_folder('INBOX')
+        print('%d messages in INBOX' % select_info[b'EXISTS'])
+        messages = server.search(['FROM', 'events@pokerstars.com'])
+        print("%d messages from google" % len(messages))
