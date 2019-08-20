@@ -50,6 +50,5 @@ class LoginFrame(Frame):
 
 
 root = Tk()
-root.title
 lf = LoginFrame(root)
-root.mainloop()
+lf.mainloop()
