@@ -4,7 +4,7 @@ import pyzmail
 import sys
 import re
 
-# mail.py uses credentials from credentials.txt to attempt connection to an imap email
+# mail.py uses credentials from credentials.txt to attempt connection to an imap gmail email
 # mail.py asks for a search term
 # mail.py uses IMAPclient and pyzmail modules to search your gmail inbox against our search term
 # mail.py may throw exceptions if it cannot pull the text_part from a message
@@ -50,7 +50,6 @@ def start_connection():
             except:
                 print("error in this message: %d" % x)
         server.logout()
-        email_counter = 0
         print("putting regex against %d emails" % len(emails))
         for email in emails:
             for pattern in patterns:
