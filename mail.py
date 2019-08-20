@@ -52,6 +52,8 @@ def start_connection():
         server.logout()
         print("putting regex against %d emails" % len(emails))
         for email in emails:
+            if len(emails) < 25:
+                print(email)
             for pattern in patterns:
                 match = re.search(pattern, email)
                 if match:
