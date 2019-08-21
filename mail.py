@@ -11,10 +11,13 @@ import re
 # mail.py checks valid text_parts against our tracking number patterns
 # mail.py contains a list (match_emails) that holds emails with a valid tracking number in the body
 
+
 def start_connection():
 
+    # empty lists
     emails = []
     match_emails = []
+    # regex patterns
     matchUPS1 = r"/\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|[\dT]\d\d\d ?\d\d\d\d ?\d\d\d)\b/"
     matchUPS2 = r"/^[kKJj]{1}[0-9]{10}$/"
     matchUSPS0 = r"/(\b\d{30}\b)|(\b91\d+\b)|(\b\d{20}\b)/"
@@ -26,25 +29,33 @@ def start_connection():
     matchFedex1 = r"/(\b96\d{20}\b)|(\b\d{15}\b)|(\b\d{12}\b)/"
     matchFedex2 = r"/\b((98\d\d\d\d\d?\d\d\d\d|98\d\d) ?\d\d\d\d ?\d\d\d\d( ?\d\d\d)?)\b/"
     matchFedex3 = r"/^[0-9]{15}$/"
+    # list of regex patterns
     patterns = [matchFedex1, matchFedex2, matchFedex3, matchUSPS0, matchUSPS1, matchUSPS2, matchUSPS3, matchUSPS4, matchUSPS5, matchUPS1, matchUPS2]
-
+    # server to connect to
     imap_url = 'imap.gmail.com'     # only works with gmail at this time
 
     with open('credentials.txt', 'r') as file:
+        # read credentials for imap account
         user = file.readline()
         password = file.readline()
 
+        # connect to server
         server = IMAPClient(imap_url, use_uid=True)
         try:
             server.login(user, password)
         except:
             print("error with account details")
             sys.exit()
+        # select inbox
         select_info = server.select_folder('INBOX')
+        # print messages in folder
         print('%d messages in INBOX' % select_info[b'EXISTS'])
+        # search through inbox with this query
         search_query = input("search for: ")
+        # list of uids (keys) for corresponding query results
         uids = server.gmail_search(search_query)
         print("%d matches found in gmail " % len(uids))
+        # get the body of those messages
         messages = server.fetch(uids, ['BODY[]'])
         for x in messages.keys():
             message = pyzmail.PyzMessage.factory(messages[x][b'BODY[]'])
@@ -54,13 +65,16 @@ def start_connection():
                 print("error in this message: %d" % x)
         server.logout()
         print("putting regex against %d emails" % len(emails))
+        # test each email against each pattern
         for email in emails:
             for pattern in patterns:
                 match = re.search(pattern, email)
+                # if match is found and its not already in the list
                 if match and match.group() not in match_emails:
                     match_emails.append(match.group())
-
+        # print number of matches found
         print("number of matching emails with tracking # patterns: %d" % len(match_emails))
+        # output tracking numbers
         if len(match_emails) > 0:
             for match in match_emails:
                 print("Tracking number found: " + match)
