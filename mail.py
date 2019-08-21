@@ -15,15 +15,18 @@ def start_connection():
 
     emails = []
     match_emails = []
-    pattern1 = re.compile("/\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|[\dT]\d\d\d ?\d\d\d\d ?\d\d\d)\b/")
-    pattern2 = re.compile("/(\b96\d{20}\b)|(\b\d{15}\b)|(\b\d{12}\b)/")
-    pattern3 = re.compile("/\b((98\d\d\d\d\d?\d\d\d\d|98\d\d) ?\d\d\d\d ?\d\d\d\d( ?\d\d\d)?)\b/")
-    pattern4 = re.compile("/^[0-9]{15}$/")
-    pattern5 = re.compile("/(\b\d{30}\b)|(\b91\d+\b)|(\b\d{20}\b)/")
-    pattern6 = re.compile("/^E\D{1}\d{9}\D{2}$|^9\d{15,21}$/")
-    pattern7 = re.compile("/^91[0-9]+$/")
-    pattern8 = re.compile("/^[A-Za-z]{2}[0-9]+US$/")
-    patterns = [pattern1, pattern2, pattern3, pattern4, pattern5, pattern6, pattern7, pattern8]
+    matchUPS1 = r"/\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|[\dT]\d\d\d ?\d\d\d\d ?\d\d\d)\b/"
+    matchUPS2 = r"/^[kKJj]{1}[0-9]{10}$/"
+    matchUSPS0 = r"/(\b\d{30}\b)|(\b91\d+\b)|(\b\d{20}\b)/"
+    matchUSPS1 = r"/(\b\d{30}\b)|(\b91\d+\b)|(\b\d{20}\b)|(\b\d{26}\b)| ^E\D{1}\d{9}\D{2}$|^9\d{15,21}$| ^91[0-9]+$| ^[A-Za-z]{2}[0-9]+US$/i"
+    matchUSPS2 = r"/^E\D{1}\d{9}\D{2}$|^9\d{15,21}$/"
+    matchUSPS3 = r"/^91[0-9]+$/"
+    matchUSPS4 = r"/^[A-Za-z]{2}[0-9]+US$/"
+    matchUSPS5 = r"/(\b\d{30}\b)|(\b91\d+\b)|(\b\d{20}\b)|(\b\d{26}\b)| ^E\D{1}\d{9}\D{2}$|^9\d{15,21}$| ^91[0-9]+$| ^[A-Za-z]{2}[0-9]+US$/i"
+    matchFedex1 = r"/(\b96\d{20}\b)|(\b\d{15}\b)|(\b\d{12}\b)/"
+    matchFedex2 = r"/\b((98\d\d\d\d\d?\d\d\d\d|98\d\d) ?\d\d\d\d ?\d\d\d\d( ?\d\d\d)?)\b/"
+    matchFedex3 = r"/^[0-9]{15}$/"
+    patterns = [matchFedex1, matchFedex2, matchFedex3, matchUSPS0, matchUSPS1, matchUSPS2, matchUSPS3, matchUSPS4, matchUSPS5, matchUPS1, matchUPS2]
 
     imap_url = 'imap.gmail.com'     # only works with gmail at this time
 
@@ -52,11 +55,13 @@ def start_connection():
         server.logout()
         print("putting regex against %d emails" % len(emails))
         for email in emails:
-            if len(emails) < 25:
-                print(email)
+            print(email)
             for pattern in patterns:
                 match = re.search(pattern, email)
-                if match:
+                if match and email not in match_emails:
                     match_emails.append(email)
+
         print("number of matching emails with tracking # patterns: %d" % len(match_emails))
+
+
 

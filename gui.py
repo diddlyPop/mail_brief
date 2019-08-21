@@ -43,8 +43,6 @@ class LoginFrame(Frame):
 
     def _load_btn_clicked(self):
         with open('credentials.txt', 'r') as file:
-            print(file.read())
-            print(file.read())
             mail.start_connection()
             root.destroy()
 
