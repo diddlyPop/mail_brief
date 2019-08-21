@@ -55,13 +55,15 @@ def start_connection():
         server.logout()
         print("putting regex against %d emails" % len(emails))
         for email in emails:
-            print(email)
             for pattern in patterns:
                 match = re.search(pattern, email)
-                if match and email not in match_emails:
-                    match_emails.append(email)
+                if match and match.group() not in match_emails:
+                    match_emails.append(match.group())
 
         print("number of matching emails with tracking # patterns: %d" % len(match_emails))
+        if len(match_emails) > 0:
+            for match in match_emails:
+                print("Tracking number found: " + match)
 
 
 
