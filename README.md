@@ -10,7 +10,7 @@ currently:
 - takes all matches and puts them in a match_emails list
 
 hope to add:
--twilio support
--imap support other than gmail
+- twilio support
+- imap support other than gmail
 
 run gui.py
